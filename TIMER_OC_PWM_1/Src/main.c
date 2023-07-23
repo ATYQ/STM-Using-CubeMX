@@ -22,11 +22,15 @@ UART_HandleTypeDef huart2;
 
 int main(void)
 {
+
+	uint16_t brightness=0;
+
 	HAL_Init();
+
 
 	SystemClock_Config_HSE(SYS_CLOCK_FREQ_50_MHZ);
 
-	GPIO_Init();
+	//GPIO_Init();
 
 	UART2_Init();
 
@@ -36,20 +40,36 @@ int main(void)
 	{
 		Error_handler();
 	}
-	if( HAL_TIM_PWM_Start(&htimer2, TIM_CHANNEL_2) != HAL_OK)
-	{
-		Error_handler();
-	}
-	if( HAL_TIM_PWM_Start(&htimer2, TIM_CHANNEL_3) != HAL_OK)
-	{
-		Error_handler();
-	}
-	if( HAL_TIM_PWM_Start(&htimer2, TIM_CHANNEL_4) != HAL_OK)
-	{
-		Error_handler();
-	}
 
-	while(1);
+
+	while(1)
+	{
+		htimer2.Instance->CCR1 = (95 * htimer2.Init.Period) / 100;
+		HAL_Delay(1000);
+		htimer2.Instance->CCR1 = (0 * htimer2.Init.Period) / 100;
+		HAL_Delay(1000);
+
+
+
+/*		while( brightness < htimer2.Init.Period)
+		{
+			brightness +=10;
+			//__HAL_TIM_SET_COMPARE(&htimer2,TIM_CHANNEL_1,brightness);
+			 htimer2.Instance->CCR1 = brightness;
+			HAL_Delay(1);
+
+		}
+
+		while(brightness > 0)
+		{
+			brightness -=10;
+			//__HAL_TIM_SET_COMPARE(&htimer2,TIM_CHANNEL_1,brightness);
+			htimer2.Instance->CCR1 = brightness;
+			HAL_Delay(1);
+
+		}*/
+
+	}
 
 	return 0;
 }
@@ -182,8 +202,8 @@ void UART2_Init(void)
 {
 	 TIM_OC_InitTypeDef tim2PWM_Config;
 	 htimer2.Instance = TIM2;
-	 htimer2.Init.Period = 1000-1; // freq = 50Mhz and CNT_CLK = f / prescaler , timer 1 ms
-	 htimer2.Init.Prescaler = 49;
+	 htimer2.Init.Period = 10000-1; // freq = 50Mhz and CNT_CLK = f / prescaler , timer 1 ms
+	 htimer2.Init.Prescaler = 4;
 	 if ( HAL_TIM_PWM_Init(&htimer2) != HAL_OK)
 	 {
 		 Error_handler();
@@ -195,27 +215,9 @@ void UART2_Init(void)
 	 tim2PWM_Config.OCPolarity = TIM_OCPOLARITY_HIGH;
 
 
-	tim2PWM_Config.Pulse =  (uint32_t)(htimer2.Init.Period * 25 ) /100;
+	tim2PWM_Config.Pulse =  0;
 
 	 if( HAL_TIM_PWM_ConfigChannel(&htimer2,&tim2PWM_Config,TIM_CHANNEL_1) != HAL_OK)
-	 {
-		 Error_handler();
-	 }
-
-	 tim2PWM_Config.Pulse =  (uint32_t)(htimer2.Init.Period * 45 ) /100;
-	 if( HAL_TIM_PWM_ConfigChannel(&htimer2,&tim2PWM_Config,TIM_CHANNEL_2) != HAL_OK)
-	 {
-		 Error_handler();
-	 }
-
-	 tim2PWM_Config.Pulse =  (uint32_t)(htimer2.Init.Period * 75 ) /100;
-	 if( HAL_TIM_PWM_ConfigChannel(&htimer2,&tim2PWM_Config,TIM_CHANNEL_3) != HAL_OK)
-	 {
-		 Error_handler();
-	 }
-
-	 tim2PWM_Config.Pulse =  (uint32_t)(htimer2.Init.Period * 95 ) /100;
-	 if( HAL_TIM_PWM_ConfigChannel(&htimer2,&tim2PWM_Config,TIM_CHANNEL_4) != HAL_OK)
 	 {
 		 Error_handler();
 	 }

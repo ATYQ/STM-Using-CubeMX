@@ -31,6 +31,7 @@ void HAL_TIM_PWM_MspInit(TIM_HandleTypeDef *htim)
 	 __HAL_RCC_GPIOA_CLK_ENABLE();
 	 __HAL_RCC_GPIOB_CLK_ENABLE();
 
+#ifdef PWM_4_CHANNEL
 	 //2. Configure gpios to behave as timer2 channel 1,2,3 and 4
 	 /* PA0 --> TIM2_CH1
 	 PA1 --> TIM2_CH2
@@ -51,6 +52,20 @@ void HAL_TIM_PWM_MspInit(TIM_HandleTypeDef *htim)
 	tim2OC_ch_gpios.Alternate = GPIO_AF1_TIM2;
 	HAL_GPIO_Init(GPIOB, &tim2OC_ch_gpios);
 
+#endif
+
+#ifndef PWM_LED
+
+	//PA5 --> TIM2_CH1
+	//Configuration LED
+	tim2OC_ch_gpios.Pin = GPIO_PIN_5;
+	tim2OC_ch_gpios.Mode = GPIO_MODE_AF_PP;
+	tim2OC_ch_gpios.Pull = GPIO_PULLDOWN;
+	tim2OC_ch_gpios.Speed = GPIO_SPEED_FREQ_LOW;
+	tim2OC_ch_gpios.Alternate = GPIO_AF1_TIM2;
+	HAL_GPIO_Init(GPIOA, &tim2OC_ch_gpios);
+
+#endif
 	 //3. nvic settings
 	 HAL_NVIC_SetPriority(TIM2_IRQn,15,0);
 	 HAL_NVIC_EnableIRQ(TIM2_IRQn);

@@ -65,7 +65,6 @@ void SystemClock_Config_HSE(uint8_t clock_freq)
 	RCC_ClkInitTypeDef Clock_Init;
     uint8_t flash_latency=0;
 
-	/* test 2 */
 	Osc_Init.OscillatorType = RCC_OSCILLATORTYPE_HSE | RCC_OSCILLATORTYPE_LSE | RCC_OSCILLATORTYPE_HSI ;
 	Osc_Init.HSEState = RCC_HSE_ON;
 	Osc_Init.LSEState = RCC_LSE_ON;
